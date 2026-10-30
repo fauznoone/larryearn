@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LARRY EARN Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+<h2>💰 LARRY EARN</h2>
+<h3>Admin Dashboard</h3>
+</header>
+
+<section class="card">
+<h3>Registered Users</h3>
+<p id="users">0 users</p>
+</section>
+
+<section class="card">
+<h3>Withdrawal Requests</h3>
+<p>No withdrawal requests yet.</p>
+</section>
+
+<section class="card">
+<h3>Manage Tasks</h3>
+<p>Task management coming soon.</p>
+</section>
+
+<script>
+const users = JSON.parse(localStorage.getItem("users") || "[]");
+document.getElementById("users").textContent =
+users.length + " users";
+</script>
+
+</body>
+</html>
