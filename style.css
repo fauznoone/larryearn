@@ -1,0 +1,73 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f8f3;
+  color: #222;
+  text-align: center;
+}
+
+header {
+  background: #087b45;
+  color: white;
+  padding: 25px;
+}
+
+.hero {
+  padding: 55px 15px;
+  background: #dff5e6;
+}
+
+.hero h1 {
+  color: #087b45;
+  font-size: 32px;
+}
+
+.btn, button {
+  background: #087b45;
+  color: white;
+  border: none;
+  padding: 13px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.balance, .card, .withdraw {
+  background: white;
+  margin: 20px auto;
+  padding: 25px;
+  width: 90%;
+  max-width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px #00000010;
+}
+
+.balance h1 {
+  color: #087b45;
+  font-size: 38px;
+}
+
+#tasks {
+  padding: 20px;
+}
+
+.card h3 {
+  color: #087b45;
+}
+
+footer {
+  background: #075b35;
+  color: white;
+  padding: 25px;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 26px;
+  }
+}
