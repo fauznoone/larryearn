@@ -2,52 +2,84 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard - LARRY EARN</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LARRY EARN Dashboard</title>
+<style>
+body{font-family:Arial;background:#f1f5f9;margin:0}
+header{background:#087b45;color:white;padding:20px;text-align:center}
+.container{padding:20px}
+.card{background:white;padding:20px;margin:15px 0;border-radius:12px;box-shadow:0 2px 8px #ddd}
+.balance{font-size:30px;color:#087b45;font-weight:bold}
+button{background:#087b45;color:white;border:0;padding:12px;border-radius:7px;width:100%;margin-top:10px}
+</style>
 </head>
 <body>
 
 <header>
 <h2>💰 LARRY EARN</h2>
-<h3 id="welcome">Welcome!</h3>
-<button onclick="logout()">Logout</button>
+<p>My Earning Dashboard</p>
 </header>
 
-<section class="balance">
-<h2>My Wallet</h2>
-<h1 id="balance">$0.00</h1>
-<p>Minimum withdrawal: $5</p>
-</section>
+<div class="container">
+<div class="card">
+<h3>Welcome, <span id="username">User</span></h3>
+<p>Available Balance</p>
+<div class="balance">₦<span id="balance">0.00</span></div>
+<p>Points: <span id="points">0</span></p>
+</div>
 
-<section>
-<h2>Available Tasks</h2>
-<p>📺 Watch Advert — Coming Soon</p>
-<p>⭐ Special Advert — Coming Soon</p>
-<p>📋 Complete Tasks — Coming Soon</p>
-</section>
+<div class="card">
+<h3>Available Tasks</h3>
+<p>Complete available tasks to earn rewards.</p>
+<button onclick="alert('Tasks will appear here when added.')">View Tasks</button>
+</div>
 
-<section class="withdraw">
-<h2>Withdraw Money</h2>
-<p>OPay | PalmPay | Nigerian Banks</p>
-<p>Withdrawal requests are not active yet.</p>
-</section>
+<div class="card">
+<h3>Withdraw Money</h3>
+<p>Request withdrawal of your approved earnings.</p>
+<button onclick="alert('Withdrawal feature is coming soon.')">Request Withdrawal</button>
+</div>
 
+<button onclick="logout()">Logout</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const user = JSON.parse(localStorage.getItem("currentUser"));
+const supabaseClient = supabase.createClient(
+"PASTE_YOUR_PROJECT_URL_HERE",https://naeukrdjudacqvcauocy.supabase.co
+"PASTE_YOUR_PUBLISHABLE_KEY_HERE"sb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms
+);
 
-if (!user) {
-  window.location.href = "login.html";
-} else {
-  document.getElementById("welcome").textContent =
-    "Welcome, " + user.name;
+async function loadDashboard(){
+const {data:{user},error} = await supabaseClient.auth.getUser();
+
+if(error || !user){
+window.location.href="login.html";
+return;
 }
 
-function logout() {
-  localStorage.removeItem("currentUser");
-  window.location.href = "login.html";
+document.getElementById("username").textContent =
+user.user_metadata.full_name || user.email;
+
+const {data,error:profileError} = await supabaseClient
+.from("profiles")
+.select("balance,points")
+.eq("id",user.id)
+.single();
+
+if(data){
+document.getElementById("balance").textContent =
+Number(data.balance).toFixed(2);
+document.getElementById("points").textContent = data.points;
 }
+}
+
+async function logout(){
+await supabaseClient.auth.signOut();
+window.location.href="login.html";
+}
+
+loadDashboard();
 </script>
-
 </body>
 </html>
