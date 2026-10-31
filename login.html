@@ -1,39 +1,62 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - LARRY EARN</title>
-<link rel="stylesheet" href="style.css">
+<title>LARRY EARN - Login</title>
+<style>
+body{font-family:Arial;background:#f1f5f9;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.box{background:white;padding:25px;border-radius:15px;width:85%;max-width:350px;box-shadow:0 4px 15px #ccc}
+h2{text-align:center;color:#087b45}
+input,button{width:100%;padding:13px;margin:9px 0;box-sizing:border-box;border-radius:7px}
+input{border:1px solid #ccc}
+button{background:#087b45;color:white;border:0;font-size:16px}
+p{text-align:center}
+a{color:#087b45}
+</style>
 </head>
 <body>
-
-<header>
+<div class="box">
 <h2>💰 LARRY EARN</h2>
 <h3>Welcome Back</h3>
-</header>
-
 <form id="loginForm">
-
-<input type="email"
-id="loginEmail"
-placeholder="Email Address"
-required>
-
-<input type="password"
-id="loginPassword"
-placeholder="Password"
-required>
-
+<input id="email" type="email" placeholder="Email address" required>
+<input id="password" type="password" placeholder="Password" required>
 <button type="submit">Login</button>
-
 </form>
+<p id="message"></p>
+<p>Don't have an account? <a href="registration.html">Register</a></p>
+</div>
 
-<p>Don't have an account?
-<a href="register.html">Register</a>
-</p>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseClient = supabase.createClient(
+"PASTE_YOUR_PROJECT_URL_HERE",https://naeukrdjudacqvcauocy.supabase.co
+"PASTE_YOUR_PUBLISHABLE_KEY_HERE"sb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms
+);
 
-<script src="app.js"></script>
+document.getElementById("loginForm").addEventListener("submit", async function(e){
+e.preventDefault();
 
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+const message = document.getElementById("message");
+
+message.textContent = "Logging in...";
+
+const {data,error} = await supabaseClient.auth.signInWithPassword({
+email: email,
+password: password
+});
+
+if(error){
+message.textContent = error.message;
+}else{
+message.textContent = "Login successful!";
+window.location.href = "index.html";
+}
+});
+</script>
 </body>
 </html>
