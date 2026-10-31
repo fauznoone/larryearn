@@ -1,29 +1,42 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LARRY EARN</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+body{font-family:Arial;background:#f1f5f9;margin:0;text-align:center}
+header,.hero,.balance,.withdraw,#tasks{padding:20px;margin:15px;background:white;border-radius:12px}
+h2{color:#087b45}
+.btn,button{display:inline-block;padding:12px 20px;background:#087b45;color:white;border:0;border-radius:7px;text-decoration:none;margin:5px}
+.card{background:#f1f5f9;padding:15px;margin:10px;border-radius:10px}
+button:disabled{background:gray}
+</style>
 </head>
+
 <body>
 
 <header>
 <h2>💰 LARRY EARN</h2>
 <p>Earn rewards by completing simple tasks</p>
-<a href="register.html" class="btn">Create Account</a>
+<a href="registration.html" class="btn">Create Account</a>
 <a href="login.html" class="btn">Login</a>
+<p id="welcome">Welcome, Guest</p>
+<button id="logout" style="display:none">Logout</button>
 </header>
 
 <section class="hero">
 <h1>Welcome to LARRY EARN</h1>
 <p>Watch adverts. Complete tasks. Earn rewards.</p>
-<a href="register.html" class="btn">Start Earning</a>
+<a href="registration.html" class="btn">Start Earning</a>
 </section>
 
 <section class="balance">
 <h2>Your Wallet</h2>
-<h1>$0.00</h1>
+<h1 id="balance">$0.00</h1>
+<p>Points: <strong id="points">0</strong></p>
 <p>Minimum withdrawal: $5</p>
 </section>
 
@@ -47,14 +60,12 @@
 <p>Earn rewards for approved tasks.</p>
 <button disabled>Coming Soon</button>
 </div>
-
 </section>
 
 <section class="withdraw">
 <h2>Withdraw Money</h2>
 <p>Minimum withdrawal: $5</p>
 <p>OPay | PalmPay | Nigerian Banks</p>
-<p>Dollar payout option</p>
 <button disabled>Coming Soon</button>
 </section>
 
@@ -62,18 +73,53 @@
 <p>© 2026 LARRY EARN</p>
 <p>Rewards are not active until payment and advertising systems are connected.</p>
 </footer>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE";
-const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
-
 const supabaseClient = supabase.createClient(
-  SUPABASE_URL,https://naeukrdjudacqvcauocy.supabase.co
-  SUPABASE_KEYsb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms
+"https://naeukrdjudacqvcauocy.supabase.co",
+"sb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms"
 );
 
-console.log("LARRY EARN connected to Supabase!");
+async function loadProfile() {
+const {data: sessionData} = await supabaseClient.auth.getSession();
+const user = sessionData.session?.user;
+
+if (!user) {
+document.getElementById("welcome").textContent = "Welcome, Guest";
+return;
+}
+
+document.getElementById("logout").style.display = "inline-block";
+
+const {data, error} = await supabaseClient
+.from("profiles")
+.select("full_name,balance,points")
+.eq("id", user.id)
+.single();
+
+if (error) {
+document.getElementById("welcome").textContent = "Profile loading failed.";
+return;
+}
+
+document.getElementById("welcome").textContent =
+"Welcome, " + (data.full_name || "User");
+
+document.getElementById("balance").textContent =
+"$" + Number(data.balance || 0).toFixed(2);
+
+document.getElementById("points").textContent = data.points || 0;
+}
+
+document.getElementById("logout").addEventListener("click", async () => {
+await supabaseClient.auth.signOut();
+window.location.href = "login.html";
+});
+
+loadProfile();
 </script>
+
 </body>
 </html>
