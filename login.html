@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,46 +16,10 @@ a{color:#087b45}
 </style>
 </head>
 <body>
+
 <div class="box">
 <h2>💰 LARRY EARN</h2>
 <h3>Welcome Back</h3>
+
 <form id="loginForm">
-<input id="email" type="email" placeholder="Email address" required>
-<input id="password" type="password" placeholder="Password" required>
-<button type="submit">Login</button>
-</form>
-<p id="message"></p>
-<p>Don't have an account? <a href="registration.html">Register</a></p>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const supabaseClient = supabase.createClient(
-"PASTE_YOUR_PROJECT_URL_HERE",https://naeukrdjudacqvcauocy.supabase.co
-"PASTE_YOUR_PUBLISHABLE_KEY_HERE"sb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms
-);
-
-document.getElementById("loginForm").addEventListener("submit", async function(e){
-e.preventDefault();
-
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
-const message = document.getElementById("message");
-
-message.textContent = "Logging in...";
-
-const {data,error} = await supabaseClient.auth.signInWithPassword({
-email: email,
-password: password
-});
-
-if(error){
-message.textContent = error.message;
-}else{
-message.textContent = "Login successful!";
-window.location.href = "index.html";
-}
-});
-</script>
-</body>
-</html>
+<input id="email" type="email" placeholder="Email address"
