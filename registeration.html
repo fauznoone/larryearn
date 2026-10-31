@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,27 +17,57 @@ a{color:#087b45}
 </style>
 </head>
 <body>
+
 <div class="box">
 <h2>💰 LARRY EARN</h2>
 <h3>Create Account</h3>
+
 <form id="registerForm">
 <input id="name" type="text" placeholder="Full name" required>
 <input id="email" type="email" placeholder="Email address" required>
 <input id="password" type="password" placeholder="Password (minimum 8 characters)" minlength="8" required>
 <button type="submit">Register</button>
 </form>
+
 <p id="message"></p>
 <p>Already registered? <a href="login.html">Login</a></p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const supabaseClient = supabase.createClient(
-"PASTE_YOUR_PROJECT_URL_HERE",https://naeukrdjudacqvcauocy.supabase.co
-"PASTE_YOUR_PUBLISHABLE_KEY_HERE"sb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms
+"https://naeukrdjudacqvcauocy.supabase.co",
+"sb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms"
 );
 
 document.getElementById("registerForm").addEventListener("submit", async function(e){
 e.preventDefault();
 
-const name = document
+const name = document.getElementById("name").value;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+const message = document.getElementById("message");
+
+message.textContent = "Creating account...";
+
+const {data, error} = await supabaseClient.auth.signUp({
+email: email,
+password: password,
+options: {
+data: {
+full_name: name
+}
+}
+});
+
+if(error){
+message.textContent = error.message;
+}else{
+message.textContent = "Account created! Check your email if confirmation is required.";
+}
+});
+</script>
+
+</body>
+</html>
