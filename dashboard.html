@@ -4,15 +4,51 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LARRY EARN Dashboard</title>
+
 <style>
-body{font-family:Arial;background:#f1f5f9;margin:0}
-header{background:#087b45;color:white;padding:20px;text-align:center}
-.container{padding:20px}
-.card{background:white;padding:20px;margin:15px 0;border-radius:12px;box-shadow:0 2px 8px #ddd}
-.balance{font-size:30px;color:#087b45;font-weight:bold}
-button{background:#087b45;color:white;border:0;padding:12px;border-radius:7px;width:100%;margin-top:10px}
+body {
+  font-family: Arial;
+  background: #f1f5f9;
+  margin: 0;
+}
+header {
+  background: #087b45;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+.container { padding: 20px; }
+.card {
+  background: white;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #ddd;
+}
+.balance {
+  font-size: 30px;
+  color: #087b45;
+  font-weight: bold;
+}
+button {
+  background: #087b45;
+  color: white;
+  border: 0;
+  padding: 12px;
+  border-radius: 7px;
+  width: 100%;
+  margin-top: 10px;
+}
+button:disabled {
+  background: gray;
+}
+#message {
+  color: #b45309;
+  font-size: 14px;
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -21,65 +57,92 @@ button{background:#087b45;color:white;border:0;padding:12px;border-radius:7px;wi
 </header>
 
 <div class="container">
+
 <div class="card">
 <h3>Welcome, <span id="username">User</span></h3>
 <p>Available Balance</p>
-<div class="balance">₦<span id="balance">0.00</span></div>
+<div class="balance">$<span id="balance">0.00</span></div>
 <p>Points: <span id="points">0</span></p>
 </div>
 
 <div class="card">
-<h3>Available Tasks</h3>
-<p>Complete available tasks to earn rewards.</p>
-<button onclick="alert('Tasks will appear here when added.')">View Tasks</button>
+<h3>📺 Watch Advertisements</h3>
+<p>Normal Advert Reward: $0.10</p>
+<button disabled>Coming Soon</button>
 </div>
 
 <div class="card">
-<h3>Withdraw Money</h3>
-<p>Request withdrawal of your approved earnings.</p>
-<button onclick="alert('Withdrawal feature is coming soon.')">Request Withdrawal</button>
+<h3>⭐ Special Advertisements</h3>
+<p>Special Advert Reward: $0.30</p>
+<button disabled>Coming Soon</button>
+</div>
+
+<div class="card">
+<h3>💵 Withdraw Money</h3>
+<p>Minimum withdrawal: $5</p>
+<button disabled>Coming Soon</button>
+</div>
+
+<div class="card">
+<h3>📊 Account Information</h3>
+<p id="message">Loading account...</p>
 </div>
 
 <button onclick="logout()">Logout</button>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const supabaseClient = supabase.createClient(
-"PASTE_YOUR_PROJECT_URL_HERE",https://naeukrdjudacqvcauocy.supabase.co
-"PASTE_YOUR_PUBLISHABLE_KEY_HERE"sb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms
+"https://naeukrdjudacqvcauocy.supabase.co",
+"sb_publishable_J45KIA6VWq9UUX1R9U5qhg_hYh1eTms"
 );
 
-async function loadDashboard(){
-const {data:{user},error} = await supabaseClient.auth.getUser();
+async function loadDashboard() {
 
-if(error || !user){
-window.location.href="login.html";
+const {data: {user}, error} =
+await supabaseClient.auth.getUser();
+
+if (error || !user) {
+window.location.href = "login.html";
 return;
 }
 
 document.getElementById("username").textContent =
 user.user_metadata.full_name || user.email;
 
-const {data,error:profileError} = await supabaseClient
+const {data, error: profileError} =
+await supabaseClient
 .from("profiles")
-.select("balance,points")
-.eq("id",user.id)
+.select("balance, points")
+.eq("id", user.id)
 .single();
 
-if(data){
-document.getElementById("balance").textContent =
-Number(data.balance).toFixed(2);
-document.getElementById("points").textContent = data.points;
-}
+if (profileError) {
+document.getElementById("message").textContent =
+"Could not load account. Please check your profile settings.";
+return;
 }
 
-async function logout(){
+document.getElementById("balance").textContent =
+Number(data.balance || 0).toFixed(2);
+
+document.getElementById("points").textContent =
+data.points || 0;
+
+document.getElementById("message").textContent =
+"Your account is connected successfully!";
+}
+
+async function logout() {
 await supabaseClient.auth.signOut();
-window.location.href="login.html";
+window.location.href = "login.html";
 }
 
 loadDashboard();
 </script>
+
 </body>
 </html>
